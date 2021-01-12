@@ -92,25 +92,25 @@ namespace DoplTechnologies.Sdk
         public static event Action<CatheterData[]> OnCatheterDataEvent;
         public static event Action<ElectricalSignalData[]> OnElectricalSignalDataEvent;
 
-        [DllImport("lib/libsdk", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("libsdk", CallingConvention = CallingConvention.Cdecl)]
         private static extern int libsdk_test();
 
-        [DllImport("lib/libsdk", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("libsdk", CallingConvention = CallingConvention.Cdecl)]
         private static extern void libsdk_initialize(GoString deviceServiceAddress, GoString sessionServiceAddress, GoString stateManagerServiceAddress, UInt64 deviceID, UInt32 devicePort, GoString ipAddress, GoSlice produces, GoSlice consumes, OnSessionCallback onSessionJoined, OnSessionCallback onSessionEnded, GetFrameCallback getFrameCallback, OnFrameCallback onFrameCallback, UInt64 defaultSessionId, int getFrameIntervalMS);
 
-        [DllImport("lib/libsdk", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("libsdk", CallingConvention = CallingConvention.Cdecl)]
         private static extern void libsdk_connect(UInt64 deviceId);
 
-        [DllImport("lib/libsdk", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("libsdk", CallingConvention = CallingConvention.Cdecl)]
         private static extern void libsdk_disconnect(UInt64 deviceID);
 
-        [DllImport("lib/libsdk", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("libsdk", CallingConvention = CallingConvention.Cdecl)]
         private static extern UInt64 libsdk_createSession(GoString name, GoSlice deviceIDs);
 
-        [DllImport("lib/libsdk", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("libsdk", CallingConvention = CallingConvention.Cdecl)]
         private static extern bool libsdk_joinSession(UInt64 sessionID);
 
-        [DllImport("lib/libsdk", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("libsdk", CallingConvention = CallingConvention.Cdecl)]
         private static extern bool libsdk_deleteSession(UInt64 sessionID);
 
         public static int Test()

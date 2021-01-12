@@ -361,4 +361,5 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 
-DoplTechnologies.Sdk/lib/
+DoplTechnologies.Sdk/libsdk.dll
+DoplTechnologies.Sdk/libsdk.so

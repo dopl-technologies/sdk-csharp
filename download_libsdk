@@ -1,7 +1,6 @@
 #!/bin/bash
 
-mkdir -p DoplTechnologies.Sdk/lib
-cd DoplTechnologies.Sdk/lib
+cd DoplTechnologies.Sdk/
 
 # Download libsdk_0.4_linux_amd64.tar.gz
 LINUX_ASSET=libsdk_0.4_linux_amd64.tar.gz
