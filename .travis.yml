@@ -1,0 +1,26 @@
+language: csharp
+mono: none
+dotnet: 3.1
+before_install:
+- sudo apt-get -y install libpam0g-dev
+- bash download_libsdk
+install:
+- dotnet restore
+script:
+- dotnet test
+- dotnet build -c Release
+before_deploy:
+- dotnet pack -c Release
+deploy:
+  skip_cleanup: true
+  provider: script
+  script: dotnet nuget push ./DoplTechnologies.Sdk/bin/Release/DoplTechnologies.Sdk.*.nupkg  --api-key
+    $NUGET_API_KEY -s https://api.nuget.org/v3/index.json
+  on:
+    branch: main
+    tags: true
+    condition: "$TRAVIS_OS_NAME = linux"
+env:
+  global:
+  - secure: gFfP7GVR5B5sVyow2KCz2OJyDFzDn7BnBYy97Iz+Pld6gSjAPY68wKW04+a/4J5ps83vnkZU2pb+/78l1q4fWZ9bdy2hXd2RXD8PrambeF4OSGUMW14Hg34XDs0LfdeIPAUc5TsucvzSWRZm1pkYnH7szvDKQUi81+hTCspMgAM1y8FbZ5YwsSC2KnVoflOgv1kEuetBhy6pCi9EvzIaEFPA8fjA4dZCKlkM8m5ubQGDwWKdTWa5wuX2txOUW9z1MDI8pjbU27Tii/1eub+iGz2Ibvdb7DodOBiA4/c8GfFMblDQqEdxTztwX+1IDySSKqC/8b9oSl9MZp60rMMEl/8evJl3UXBeh1PH9Ir3pWZwe80l+1peFr3WHh3jIyGWg3N6herczskqOsnLFQThD8neUzfb0XDzzNyOwll9pBENVaI+nXBHsTOXK5mn4guLRmntEO2Hcz4Xu2tUke1Jk7jK7JLShb+6T3adp5hua3OlminoFbKLmoCdD+vj1hFc4iZCjyeYA3LjDU9bxI0dSkHIaereNqoeLbDlLL1Df3wtAQgJzxo7t1CG+GPLHj4nSf3scbiJy4Kng4YzS092hkhZ0K/Egj4GepEWkBOS99H5I0jAwsyqpjOwH6gfXuXjmOaVgsfszYXgE4pZUl+3hD4VxxQFba1QKRBKWfIRRyQ= # GITHUB_TOKEN
+  - secure: CmtMj3CgPmq9iYtdyGwee/370ImzGRjRZok1W3DaYs6j2D7AXo1OoFw4ZmyevubGVCzg3bdNp+1N6OyxVBIY9oYjRxap57l9+ZJHNn4fbAIZ+3my065vo+Deh9GIuvNXmauUAx1vcrstW0Kr4ZjHhj68cKA5js5mpRUTyYnHj6uIKJqnJGy9dv17kNoUF9v9uw0dT+RFoQSIwTBRJs/Mlqi5J0Dl2XEBp5+Rq0Is1weiIyetCJ35KAinAdKVJfSukfwQTAkoFPMeZXM2EBw0MBYTvWMGa1ZgQSfMrnGaP2xPh7qVy46vUKpH+KRNQPFN/J5a6z5mfQulAOF3qPpJb458PAzCuVC5fL8+QisMdEG75IUT1Fl7V2T5L/Ajej/a5MF9K5asHQRDy3y7EreLhq1QmgTYswqShWng1M2pYjG4dus/npFKZHBSjDcHABGmVWGE1TX+H1eBa7m4bRhkd3rDJTNGbHD/aU3Zs+Ke94qKT99ytAORGqBQKzCmKCu3tRgVCC8MDayXdGrzp07ybWT80/hHeCj6wcDuBrfez492pJRc6a9lvkyBJl9jgbnxohPqFHHLHMTAqfY0sH+lBcX2+/4XZeTi5UVU6M476M2sMf1dijJu8VMGyf/mIuWbA2cHTkQkQgetebco/25mXcQog6rADr8jvEqYm+apnXU= # NUGET_API_KEY
