@@ -2,19 +2,19 @@
 
 cd DoplTechnologies.Sdk/
 
-# Download libsdk_1.0.0_linux_amd64.tar.gz
-LINUX_ASSET=libsdk_1.0.0_linux_amd64.tar.gz
+# Download libsdk_1.1.0_linux_amd64.tar.gz
+LINUX_ASSET=libsdk_1.1.0_linux_amd64.tar.gz
 if [ ! -f libsdk.so ]; then
-    curl -H "Authorization: token $GITHUB_TOKEN" 'https://api.github.com/repos/dopl-technologies/libsdk/releases/assets/30572732' -LJOH 'Accept: application/octet-stream'
+    curl -H "Authorization: token $GITHUB_TOKEN" 'https://api.github.com/repos/dopl-technologies/libsdk/releases/assets/30579632' -LJOH 'Accept: application/octet-stream'
     tar -xvf $LINUX_ASSET
     mv libsdk libsdk.so
     rm $LINUX_ASSET
 fi
 
-# Download libsdk_1.0.0_windows_amd64.zip
-WINDOWS_ASSET=libsdk_1.0.0_windows_amd64.zip
+# Download libsdk_1.1.0_windows_amd64.zip
+WINDOWS_ASSET=libsdk_1.1.0_windows_amd64.zip
 if [ ! -f libsdk.dll ]; then
-    curl -H "Authorization: token $GITHUB_TOKEN" 'https://api.github.com/repos/dopl-technologies/libsdk/releases/assets/30572731' -LJOH 'Accept: application/octet-stream'
+    curl -H "Authorization: token $GITHUB_TOKEN" 'https://api.github.com/repos/dopl-technologies/libsdk/releases/assets/30579635' -LJOH 'Accept: application/octet-stream'
     unzip -o $WINDOWS_ASSET
     rm $WINDOWS_ASSET
 fi

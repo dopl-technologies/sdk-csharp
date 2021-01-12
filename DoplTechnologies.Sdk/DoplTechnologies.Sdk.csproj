@@ -6,7 +6,7 @@
     <RootNamespace>DoplTechnologies.Sdk</RootNamespace>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <PackageId>DoplTechnologies.Sdk</PackageId>
-    <Version>1.0.0</Version>
+    <Version>1.1.0</Version>
     <Authors>Ryan James</Authors>
     <Company>Dopl Technologies</Company>
   </PropertyGroup>
