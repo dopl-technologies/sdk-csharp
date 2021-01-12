@@ -90,6 +90,7 @@ namespace DoplTechnologies.Sdk
         public static event Func<RobotControllerData> OnGetRobotControllerDataEvent;
         public static event Func<ElectricalSignalData[]> OnGetElectricalSignalDataEvent;
         public static event Action<CatheterData[]> OnCatheterDataEvent;
+        public static event Action<ElectricalSignalData[]> OnElectricalSignalDataEvent;
 
         [DllImport("lib/libsdk", CallingConvention = CallingConvention.Cdecl)]
         private static extern int libsdk_test();
@@ -246,6 +247,11 @@ namespace DoplTechnologies.Sdk
             if (frame.CatheterData != null)
             {
                 OnCatheterDataEvent?.Invoke(frame.CatheterData.ToArray());
+            }
+
+            if (frame.ElectricalSignals != null)
+            {
+                OnElectricalSignalDataEvent?.Invoke(frame.ElectricalSignals.ToArray());
             }
 
             return true;

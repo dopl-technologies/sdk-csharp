@@ -6,7 +6,7 @@
     <RootNamespace>DoplTechnologies.Sdk</RootNamespace>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <PackageId>DoplTechnologies.Sdk</PackageId>
-    <Version>0.1.0</Version>
+    <Version>0.1.1</Version>
     <Authors>Ryan James</Authors>
     <Company>Dopl Technologies</Company>
   </PropertyGroup>
@@ -21,14 +21,14 @@
     <Content Include="./lib/libsdk.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <Pack>true</Pack>
-      <PackagePath>lib\$(TargetFramework)</PackagePath>
+      <PackagePath>lib\$(TargetFramework)/lib</PackagePath>
     </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="./lib/libsdk.so">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <Pack>true</Pack>
-      <PackagePath>lib\$(TargetFramework)</PackagePath>
+      <PackagePath>lib\$(TargetFramework)/lib</PackagePath>
     </Content>
   </ItemGroup>
 
