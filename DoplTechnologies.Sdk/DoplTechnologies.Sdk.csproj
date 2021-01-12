@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <RootNamespace>DoplTechnologies.Sdk</RootNamespace>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <PackageId>DoplTechnologies.Sdk</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Ryan James</Authors>
+    <Company>Dopl Technologies</Company>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DoplTechnologies.Protos" Version="0.1.0" />
+    <PackageReference Include="Google.Protobuf" Version="3.8.0" />
+    <PackageReference Include="Grpc" Version="1.19.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="./lib/libsdk.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Pack>true</Pack>
+      <PackagePath>lib\$(TargetFramework)</PackagePath>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="./lib/libsdk.so">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Pack>true</Pack>
+      <PackagePath>lib\$(TargetFramework)</PackagePath>
+    </Content>
+  </ItemGroup>
+
+</Project>
