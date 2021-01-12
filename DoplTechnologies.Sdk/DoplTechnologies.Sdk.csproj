@@ -6,7 +6,7 @@
     <RootNamespace>DoplTechnologies.Sdk</RootNamespace>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <PackageId>DoplTechnologies.Sdk</PackageId>
-    <Version>0.1.2</Version>
+    <Version>0.1.3</Version>
     <Authors>Ryan James</Authors>
     <Company>Dopl Technologies</Company>
   </PropertyGroup>
@@ -21,14 +21,14 @@
     <Content Include="./libsdk.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <Pack>true</Pack>
-      <PackagePath>lib\$(TargetFramework)</PackagePath>
+      <PackagePath>runtimes\win-x64\native</PackagePath>
     </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="./libsdk.so">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <Pack>true</Pack>
-      <PackagePath>lib\$(TargetFramework)</PackagePath>
+      <PackagePath>runtimes\linux-x64\native</PackagePath>
     </Content>
   </ItemGroup>
 
