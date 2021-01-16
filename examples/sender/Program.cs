@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using DoplTechnologies.Protos;
 using DoplTechnologies.Sdk;
 
-namespace Example
+namespace DoplTechnologies.Sdk.Examples.Sender
 {
     class Program
     {
@@ -27,17 +27,23 @@ namespace Example
                 "device-service.beta.dopltechnologies.com:3000",
                 "state-manager-service.beta.dopltechnologies.com:3005",
                 deviceId,
-                3000,
+                30000,
                 "",
-                new[] { DataType.CatheterSensorCoordinates },
-                new DataType[] { DataType.ElectricalSignals },
+                new DataType[]
+                {
+                    DataType.CatheterSensorCoordinates,
+                    DataType.ElectricalSignals,
+                    DataType.RobotControls
+                },
+                new DataType[0],
                 0
             );
 
             TeleroboticSdk.OnGetCatheterDataEvent += GetCatheterCoordinates;
-            TeleroboticSdk.OnElectricalSignalDataEvent += OnElectricalSignalsReceived;
+            TeleroboticSdk.OnGetElectricalSignalDataEvent += GetElectricalSignalData;
+            TeleroboticSdk.OnGetRobotControllerDataEvent += GetRobotControllerData;
+            
             var connectTask = TeleroboticSdk.Connect(deviceId);
-
             while (_running) { }
             TeleroboticSdk.Disconnect(deviceId);
 
@@ -51,8 +57,9 @@ namespace Example
 
         private static CatheterData[] GetCatheterCoordinates()
         {
+            Console.WriteLine("Sending Catheter Data");
             List<CatheterData> data = new List<CatheterData>();
-            for(int i = 0; i < 10; i++)
+            for(int i = 0; i < 3; i++)
             {
                 data.Add(new CatheterData
                 {
@@ -61,16 +68,16 @@ namespace Example
                     {
                         Position = new Coordinates
                         {
-                            X = 1,
-                            Y = 2,
-                            Z = 3
+                            X = (1 + i) / 1000,
+                            Y = (2 + i) / 1000,
+                            Z = (3 + i) / 1000
                         },
                         Rotation = new Quaternion
                         {
                             W = 1,
-                            X = 2,
-                            Y = 3,
-                            Z = 4
+                            X = (1 + i) / 1000,
+                            Y = (2 + i) / 1000,
+                            Z = (3 + i) / 1000
                         }
                     },
                 });
@@ -79,10 +86,32 @@ namespace Example
             return data.ToArray();
         }
 
-        private static void OnElectricalSignalsReceived(ElectricalSignalData[] signals)
+        private static ElectricalSignalData[] GetElectricalSignalData()
         {
-            foreach (var s in signals)
-                Console.WriteLine(s);
+            Console.WriteLine("Sending Electrical Signal Data");
+            List<ElectricalSignalData> data = new List<ElectricalSignalData>();
+            for(int i = 0; i < 5; i++)
+            {
+                data.Add(new ElectricalSignalData
+                {
+                    SignalId = (uint)i,
+                    Value = i,
+                });
+            }
+
+            return data.ToArray();
+        }
+
+        private static RobotControllerData GetRobotControllerData()
+        {
+            Console.WriteLine("Sending Robot Controller Data");
+            Random rnd = new Random();
+            return new RobotControllerData()
+            {
+                MovementVelocity = rnd.Next(-1000, 1000) / 1000.0f,
+                RotationVelocity = rnd.Next(-1000, 1000) / 1000.0f,
+                DeflectionVelocity = rnd.Next(-1000, 1000) / 1000.0f,
+            };
         }
     }
 }
