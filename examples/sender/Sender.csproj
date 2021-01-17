@@ -7,6 +7,14 @@
 
   <ItemGroup>
     <PackageReference Include="DoplTechnologies.Sdk" Version="1.1.1" />
+    <!-- <ProjectReference Include="..\..\DoplTechnologies.Sdk\DoplTechnologies.Sdk.csproj" /> -->
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="./.dopltech.yml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Pack>false</Pack>
+    </Content>
   </ItemGroup>
 
 </Project>

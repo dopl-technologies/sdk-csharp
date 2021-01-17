@@ -1,6 +1,7 @@
 ﻿using DoplTechnologies.Protos;
 using Google.Protobuf;
 using System;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -9,6 +10,10 @@ namespace DoplTechnologies.Sdk
 {
     public class TeleroboticSdk
     {
+        public string DefaultConfigFilePath = Path.Combine(
+            Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location),
+            ".dopltech.yml"
+        );
         public struct GoSlice
         {
             public IntPtr data;
@@ -61,10 +66,10 @@ namespace DoplTechnologies.Sdk
             Disconnected,
         }
 
-        public static event Action<ConnectionState> OnStateChanged;
+        public event Action<ConnectionState> OnStateChanged;
 
-        private static ConnectionState _state = ConnectionState.Disconnected;
-        public static ConnectionState State
+        private ConnectionState _state = ConnectionState.Disconnected;
+        public ConnectionState State
         {
             get { return _state; }
             set
@@ -84,26 +89,26 @@ namespace DoplTechnologies.Sdk
         unsafe private delegate bool GetFrameCallback(byte* data, int* bufferSizePtr);
         unsafe private delegate bool OnFrameCallback(byte* data, int bufferSize);
 
-        public static event Action<UInt64> OnSessionJoinedEvent;
-        public static event Action<UInt64> OnSessionEndedEvent;
-        public static event Func<CatheterData[]> OnGetCatheterDataEvent;
-        public static event Func<RobotControllerData> OnGetRobotControllerDataEvent;
-        public static event Func<ElectricalSignalData[]> OnGetElectricalSignalDataEvent;
-        public static event Action<CatheterData[]> OnCatheterDataEvent;
-        public static event Action<ElectricalSignalData[]> OnElectricalSignalDataEvent;
-        public static event Action<RobotControllerData> OnRobotControllerDataEvent;
+        public event Action<UInt64> OnSessionJoinedEvent;
+        public event Action<UInt64> OnSessionEndedEvent;
+        public event Func<CatheterData[]> OnGetCatheterDataEvent;
+        public event Func<RobotControllerData> OnGetRobotControllerDataEvent;
+        public event Func<ElectricalSignalData[]> OnGetElectricalSignalDataEvent;
+        public event Action<CatheterData[]> OnCatheterDataEvent;
+        public event Action<ElectricalSignalData[]> OnElectricalSignalDataEvent;
+        public event Action<RobotControllerData> OnRobotControllerDataEvent;
 
         [DllImport("libsdk", CallingConvention = CallingConvention.Cdecl)]
         private static extern int libsdk_test();
 
         [DllImport("libsdk", CallingConvention = CallingConvention.Cdecl)]
-        private static extern void libsdk_initialize(GoString deviceServiceAddress, GoString sessionServiceAddress, GoString stateManagerServiceAddress, UInt64 deviceID, UInt32 devicePort, GoString ipAddress, GoSlice produces, GoSlice consumes, OnSessionCallback onSessionJoined, OnSessionCallback onSessionEnded, GetFrameCallback getFrameCallback, OnFrameCallback onFrameCallback, UInt64 defaultSessionId, int getFrameIntervalMS);
+        private static extern bool libsdk_initialize(GoString configFilePath, OnSessionCallback onSessionJoined, OnSessionCallback onSessionEnded, GetFrameCallback getFrameCallback, OnFrameCallback onFrameCallback);
 
         [DllImport("libsdk", CallingConvention = CallingConvention.Cdecl)]
-        private static extern void libsdk_connect(UInt64 deviceId);
+        private static extern void libsdk_connect();
 
         [DllImport("libsdk", CallingConvention = CallingConvention.Cdecl)]
-        private static extern void libsdk_disconnect(UInt64 deviceID);
+        private static extern void libsdk_disconnect();
 
         [DllImport("libsdk", CallingConvention = CallingConvention.Cdecl)]
         private static extern UInt64 libsdk_createSession(GoString name, GoSlice deviceIDs);
@@ -114,60 +119,61 @@ namespace DoplTechnologies.Sdk
         [DllImport("libsdk", CallingConvention = CallingConvention.Cdecl)]
         private static extern bool libsdk_deleteSession(UInt64 sessionID);
 
-        public static int Test()
+        public int Test()
         {
             return libsdk_test();
         }
 
-        private static OnSessionCallback _onSessionJoined;
-        private static OnSessionCallback _onSessionEnded;
-        private static GetFrameCallback _getFrameCallback;
-        private static OnFrameCallback _onFrameCallback;
-        unsafe public static void Initialize(string deviceServiceAddress, string sessionServiceAddress, string stateManagerServiceAddress, UInt64 deviceId, UInt32 devicePort, string ipAddress, DataType[] produces, DataType[] consumes, UInt64 defaultSessionId, int getFrameIntervalMS = 30)
+        private OnSessionCallback _onSessionJoined;
+        private OnSessionCallback _onSessionEnded;
+        private GetFrameCallback _getFrameCallback;
+        private OnFrameCallback _onFrameCallback;
+
+        public TeleroboticSdk(string configFilePath = null) {
+            if (!Initialize(configFilePath))
+                throw new ArgumentException("Invalid config");
+        }
+
+        unsafe private bool Initialize(string configFilePath = null)
         {
+            if (configFilePath == null) {
+                configFilePath = DefaultConfigFilePath;
+            }
+
             _onSessionJoined = new OnSessionCallback(OnSessionJoined);
             _onSessionEnded = new OnSessionCallback(OnSessionEnded);
             _getFrameCallback = new GetFrameCallback(HandleGetFrame);
             _onFrameCallback = new OnFrameCallback(HandleOnFrame);
 
             Console.WriteLine("Initializing platform sdk");
-            libsdk_initialize(
-                GoString.Create(deviceServiceAddress),
-                GoString.Create(sessionServiceAddress),
-                GoString.Create(stateManagerServiceAddress),
-                deviceId,
-                devicePort,
-                GoString.Create(ipAddress),
-                GoSlice.Create(produces.Select(item => (Int64)item).ToArray()),
-                GoSlice.Create(consumes.Select(item => (Int64)item).ToArray()),
+            return libsdk_initialize(
+                GoString.Create(configFilePath),
                 _onSessionJoined,
                 _onSessionEnded,
                 _getFrameCallback,
-                _onFrameCallback,
-                defaultSessionId,
-                getFrameIntervalMS
+                _onFrameCallback
             );
         }
 
-        unsafe public static Task Connect(UInt64 deviceId)
+        unsafe public Task Connect()
         {
             Console.WriteLine("Platform sdk connecting");
             State = ConnectionState.Connecting;
             return Task.Run(() =>
             {
-                libsdk_connect(deviceId);
+                libsdk_connect();
                 Console.WriteLine("Connect completed");
             });
         }
 
-        public static void Disconnect(UInt64 deviceId)
+        public void Disconnect()
         {
-            Console.WriteLine($"Disconnecting {deviceId}");
+            Console.WriteLine("Disconnecting from platform");
             State = ConnectionState.Disconnecting;
-            libsdk_disconnect(deviceId);
+            libsdk_disconnect();
         }
 
-        public static UInt64 CreateSession(string name, UInt64[] deviceIDs)
+        public UInt64 CreateSession(string name, UInt64[] deviceIDs)
         {
             Console.WriteLine($"Creating session");
             var sessionID = libsdk_createSession(GoString.Create(name), GoSlice.Create(deviceIDs));
@@ -181,13 +187,13 @@ namespace DoplTechnologies.Sdk
             return 0;
         }
 
-        public static bool DeleteSession(UInt64 sessionID)
+        public bool DeleteSession(UInt64 sessionID)
         {
             Console.WriteLine($"Deleting session {sessionID}");
             return libsdk_deleteSession(sessionID);
         }
 
-        public static Task JoinSession(UInt64 sessionID)
+        public Task JoinSession(UInt64 sessionID)
         {
             Console.WriteLine($"Joining session {sessionID}");
             State = ConnectionState.Connecting;
@@ -198,21 +204,21 @@ namespace DoplTechnologies.Sdk
             });
         }
 
-        private static void OnSessionJoined(UInt64 sessionId)
+        private void OnSessionJoined(UInt64 sessionId)
         {
             Console.WriteLine($"Joined session {sessionId}");
             State = ConnectionState.Connected;
             OnSessionJoinedEvent?.Invoke(sessionId);
         }
 
-        private static void OnSessionEnded(UInt64 sessionId)
+        private void OnSessionEnded(UInt64 sessionId)
         {
             Console.WriteLine($"Session {sessionId} ended");
             State = ConnectionState.Disconnected;
             OnSessionEndedEvent?.Invoke(sessionId);
         }
 
-        unsafe private static bool HandleGetFrame(byte* buffer, int* bufferSizePtr)
+        unsafe private bool HandleGetFrame(byte* buffer, int* bufferSizePtr)
         {
             CatheterData[] catheterData = OnGetCatheterDataEvent?.Invoke();
             var robotControllerData = OnGetRobotControllerDataEvent?.Invoke();
@@ -237,7 +243,7 @@ namespace DoplTechnologies.Sdk
             return FillBufferWithFrame(buffer, bufferSizePtr, frame);
         }
 
-        unsafe private static bool HandleOnFrame(byte* buffer, int bufferSize)
+        unsafe private bool HandleOnFrame(byte* buffer, int bufferSize)
         {
             var frame = BufferToFrame(buffer, bufferSize);
             if (frame == null)
@@ -263,7 +269,7 @@ namespace DoplTechnologies.Sdk
             return true;
         }
 
-        unsafe private static bool FillBufferWithFrame(byte* buffer, int* bufferSizePtr, Frame frame)
+        unsafe private bool FillBufferWithFrame(byte* buffer, int* bufferSizePtr, Frame frame)
         {
             var franeBytes = frame.ToByteString().ToByteArray();
             Marshal.Copy(franeBytes, 0, new IntPtr(buffer), franeBytes.Length);
@@ -271,7 +277,7 @@ namespace DoplTechnologies.Sdk
             return true;
         }
 
-        unsafe private static Frame BufferToFrame(byte* buffer, int bufferSize)
+        unsafe private Frame BufferToFrame(byte* buffer, int bufferSize)
         {
             var frameBytes = new byte[bufferSize];
             Marshal.Copy(new IntPtr(buffer), frameBytes, 0, bufferSize);
