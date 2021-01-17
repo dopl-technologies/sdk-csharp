@@ -21,31 +21,14 @@ namespace DoplTechnologies.Sdk.Examples.Receiver
             _running = true;
             Console.CancelKeyPress += new ConsoleCancelEventHandler(ConsoleCancelKeyPress);
 
-            const int deviceId = 9;
-            TeleroboticSdk.Initialize(
-                "session-service.beta.dopltechnologies.com:3000",
-                "device-service.beta.dopltechnologies.com:3000",
-                "state-manager-service.beta.dopltechnologies.com:3005",
-                deviceId,
-                30001,
-                "",
-                new DataType[0],
-                new DataType[]
-                {
-                    DataType.CatheterSensorCoordinates,
-                    DataType.ElectricalSignals,
-                    DataType.RobotControls
-                },
-                0
-            );
-
-            TeleroboticSdk.OnCatheterDataEvent += OnCatheterDataReceived;
-            TeleroboticSdk.OnElectricalSignalDataEvent += OnElectricalSignalData;
-            TeleroboticSdk.OnRobotControllerDataEvent += OnRobotControllerData;
+            var teleroboticSdk = new TeleroboticSdk();
+            teleroboticSdk.OnCatheterDataEvent += OnCatheterDataReceived;
+            teleroboticSdk.OnElectricalSignalDataEvent += OnElectricalSignalData;
+            teleroboticSdk.OnRobotControllerDataEvent += OnRobotControllerData;
             
-            var connectTask = TeleroboticSdk.Connect(deviceId);
+            var connectTask = teleroboticSdk.Connect();
             while (_running) { }
-            TeleroboticSdk.Disconnect(deviceId);
+            teleroboticSdk.Disconnect();
 
             await connectTask;
         }

@@ -7,11 +7,15 @@
 
   <ItemGroup>
     <PackageReference Include="DoplTechnologies.Sdk" Version="1.1.1" />
+    <!-- <ProjectReference Include="..\..\DoplTechnologies.Sdk\DoplTechnologies.Sdk.csproj" /> -->
     <PackageReference Include="newtonsoft.json" Version="12.0.3" />
   </ItemGroup>
 
-  <!-- <ItemGroup>
-    
-  </ItemGroup> -->
+  <ItemGroup>
+    <Content Include="./.dopltech.yml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Pack>false</Pack>
+    </Content>
+  </ItemGroup>
 
 </Project>

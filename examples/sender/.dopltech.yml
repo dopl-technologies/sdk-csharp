@@ -1,0 +1,9 @@
+deviceServiceAddress: "device-service.beta.dopltechnologies.com:3000"
+sessionServiceAddress: "session-service.beta.dopltechnologies.com:3000"
+stateManagerServiceAddress: "state-manager-service.beta.dopltechnologies.com:3005"
+deviceId: 8
+devicePort: 3000
+produces:
+- 1
+- 2
+- 3
