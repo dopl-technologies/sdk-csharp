@@ -119,7 +119,7 @@ namespace DoplTechnologies.Sdk
         [DllImport("libsdk", CallingConvention = CallingConvention.Cdecl)]
         private static extern bool libsdk_deleteSession(UInt64 sessionID);
 
-        public int Test()
+        public static int Test()
         {
             return libsdk_test();
         }
