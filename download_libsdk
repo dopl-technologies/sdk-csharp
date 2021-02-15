@@ -2,21 +2,17 @@
 
 cd DoplTechnologies.Sdk/
 
-# Download libsdk_2.0.1_linux_amd64.tar.gz
-LINUX_ASSET=libsdk_2.0.1_linux_amd64.tar.gz
-if [ ! -f libsdk.so ]; then
-    curl -H "Authorization: token $GITHUB_TOKEN" 'https://api.github.com/repos/dopl-technologies/libsdk/releases/assets/31107176' -LJOH 'Accept: application/octet-stream'
-    tar -xvf $LINUX_ASSET
-    mv libsdk libsdk.so
-    rm $LINUX_ASSET
-fi
+# Download libsdk_2.0.3_linux_amd64.tar.gz
+LINUX_ASSET=libsdk_2.0.3_linux_amd64.tar.gz
+curl -H "Authorization: token $GITHUB_TOKEN" 'https://api.github.com/repos/dopl-technologies/libsdk/releases/assets/31445836' -LJOH 'Accept: application/octet-stream'
+tar -xvf $LINUX_ASSET
+mv libsdk libsdk.so
+rm $LINUX_ASSET
 
-# Download libsdk_2.0.1_windows_amd64.zip
-WINDOWS_ASSET=libsdk_2.0.1_windows_amd64.zip
-if [ ! -f libsdk.dll ]; then
-    curl -H "Authorization: token $GITHUB_TOKEN" 'https://api.github.com/repos/dopl-technologies/libsdk/releases/assets/31107178' -LJOH 'Accept: application/octet-stream'
-    unzip -o $WINDOWS_ASSET
-    rm $WINDOWS_ASSET
-fi
+# Download libsdk_2.0.3_windows_amd64.zip
+WINDOWS_ASSET=libsdk_2.0.3_windows_amd64.zip
+curl -H "Authorization: token $GITHUB_TOKEN" 'https://api.github.com/repos/dopl-technologies/libsdk/releases/assets/31445835' -LJOH 'Accept: application/octet-stream'
+unzip -o $WINDOWS_ASSET
+rm $WINDOWS_ASSET
 
 cd -
