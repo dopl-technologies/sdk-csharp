@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DoplTechnologies.Sdk" Version="2.0.1" />
+    <PackageReference Include="DoplTechnologies.Sdk" Version="2.0.3" />
     <!-- <ProjectReference Include="..\..\DoplTechnologies.Sdk\DoplTechnologies.Sdk.csproj" /> -->
   </ItemGroup>
 
