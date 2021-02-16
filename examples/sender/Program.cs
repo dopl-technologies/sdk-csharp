@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Google.Protobuf.WellKnownTypes;
 using DoplTechnologies.Protos;
 using DoplTechnologies.Sdk;
 
@@ -44,6 +45,7 @@ namespace DoplTechnologies.Sdk.Examples.Sender
             List<CatheterData> data = new List<CatheterData>();
             for(int i = 0; i < 3; i++)
             {
+                Random r = new Random();
                 data.Add(new CatheterData
                 {
                     SensorId = (UInt32)i,
@@ -51,9 +53,9 @@ namespace DoplTechnologies.Sdk.Examples.Sender
                     {
                         Position = new Coordinates
                         {
-                            X = (1 + i) / 1000,
-                            Y = (2 + i) / 1000,
-                            Z = (3 + i) / 1000
+                            X = r.Next(-10, 10) / 1000f,
+                            Y = r.Next(-00, 10) / 1000f,
+                            Z = r.Next(-10, 10) / 1000f
                         },
                         Rotation = new Quaternion
                         {
@@ -79,6 +81,7 @@ namespace DoplTechnologies.Sdk.Examples.Sender
                 {
                     SignalId = (uint)i,
                     Value = i,
+                    Created = Timestamp.FromDateTime(DateTime.UtcNow),
                 });
             }
 

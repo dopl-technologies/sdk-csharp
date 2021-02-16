@@ -8,6 +8,7 @@
   <ItemGroup>
     <PackageReference Include="DoplTechnologies.Sdk" Version="2.0.3" />
     <!-- <ProjectReference Include="..\..\DoplTechnologies.Sdk\DoplTechnologies.Sdk.csproj" /> -->
+    <PackageReference Include="Google.Protobuf" Version="3.8.0" />
   </ItemGroup>
 
   <ItemGroup>
